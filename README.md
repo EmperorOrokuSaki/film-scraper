@@ -1,30 +1,46 @@
-# Film screening scraper
+# Film Screening Scraper - Berlin
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A clean, minimal web app that scrapes original language film screenings (OmU, OmeU, OV) from Berlin cinemas.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/emperororokusakis-projects/v0-film-screening-scraper)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/JmHJVOTvXVC)
+## Features
 
-## Overview
+- Scrapes **Babylon Berlin** and **Yorck Kinos** for film screenings
+- Filters for original language films with subtitles (OmU, OmeU, OV)
+- Simple, fast, easy-to-read interface
+- Search and filter functionality
+- Mobile-friendly design
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Tech Stack
 
-## Deployment
+- **SvelteKit** - Fast, minimal web framework
+- **Cheerio** - HTML parsing for web scraping
+- **TypeScript** - Type safety
 
-Your project is live at:
+## Development
 
-**[https://vercel.com/emperororokusakis-projects/v0-film-screening-scraper](https://vercel.com/emperororokusakis-projects/v0-film-screening-scraper)**
+```bash
+# Install dependencies
+npm install
 
-## Build your app
+# Run development server
+npm run dev
 
-Continue building your app on:
+# Build for production
+npm run build
 
-**[https://v0.app/chat/JmHJVOTvXVC](https://v0.app/chat/JmHJVOTvXVC)**
+# Preview production build
+npm run preview
+```
 
 ## How It Works
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+1. Scrapes Babylon Berlin and Yorck Kinos websites
+2. Extracts film information (title, showtimes, directors, etc.)
+3. Filters for original language screenings
+4. Displays in a clean timeline view grouped by day
+5. Data is cached locally in `data/screenings.json`
+
+## API Routes
+
+- `GET /api/screenings` - Get cached screenings
+- `POST /api/scrape?days=7` - Scrape new screenings
