@@ -1,38 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { FilmScreening, DayGroup } from '$lib/types';
+	import type { PageData } from './$types';
 
-	let screenings: FilmScreening[] = [];
-	let loading = true;
-	let scraping = false;
+	export let data: PageData;
+
 	let searchQuery = '';
 	let selectedSource: 'all' | 'babylon' | 'yorck' = 'all';
 
-	onMount(async () => {
-		await loadScreenings();
-	});
-
-	async function loadScreenings() {
-		loading = true;
-		try {
-			const response = await fetch('/api/screenings');
-			screenings = await response.json();
-		} catch (error) {
-			console.error('Error loading screenings:', error);
-		}
-		loading = false;
-	}
-
-	async function scrapeFilms() {
-		scraping = true;
-		try {
-			const response = await fetch('/api/scrape?days=7', { method: 'POST' });
-			screenings = await response.json();
-		} catch (error) {
-			console.error('Error scraping films:', error);
-		}
-		scraping = false;
-	}
+	$: screenings = data.screenings as FilmScreening[];
 
 	function groupByDay(screenings: FilmScreening[]): DayGroup[] {
 		const groups: Record<string, FilmScreening[]> = {};
@@ -80,6 +55,7 @@
 	<header>
 		<h1>🎬 Film Screenings in Berlin</h1>
 		<p>Original language films (OmU, OmeU, OV) from Babylon Berlin & Yorck Kinos</p>
+		<p class="build-info">Data updated at build time • Deployed on GitHub Pages</p>
 	</header>
 
 	<div class="controls">
@@ -111,15 +87,10 @@
 			</button>
 		</div>
 
-		<button class="scrape-btn" on:click={scrapeFilms} disabled={scraping}>
-			{scraping ? 'Scraping...' : 'Refresh Films'}
-		</button>
 	</div>
 
-	{#if loading}
-		<div class="loading">Loading films...</div>
-	{:else if dayGroups.length === 0}
-		<div class="empty">No films found. Click "Refresh Films" to scrape new screenings.</div>
+	{#if dayGroups.length === 0}
+		<div class="empty">No films found. Data will be updated on next deployment.</div>
 	{:else}
 		{#each dayGroups as { date, screenings }}
 			<section class="day-section">
@@ -227,6 +198,12 @@
 		font-size: 1.1rem;
 	}
 
+	.build-info {
+		color: #999;
+		font-size: 0.9rem;
+		margin-top: 0.5rem;
+	}
+
 	.controls {
 		display: flex;
 		gap: 1rem;
@@ -280,17 +257,6 @@
 		cursor: not-allowed;
 	}
 
-	.scrape-btn {
-		background: #4a90e2;
-		color: white;
-		border-color: #4a90e2;
-	}
-
-	.scrape-btn:hover:not(:disabled) {
-		background: #357abd;
-	}
-
-	.loading,
 	.empty {
 		text-align: center;
 		padding: 3rem;
